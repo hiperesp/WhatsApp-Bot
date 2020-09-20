@@ -1,0 +1,26 @@
+{
+    "name": "hiperesp/whatsapp-bot",
+    "description": "Sistema de teste",
+    "minimum-stability": "stable",
+    "license": "Undefined",
+    "authors": [
+        {
+            "name": "Gabriel Lopes",
+            "email": "gabriel@gabstep.com.br",
+            "role": "Developer",
+            "homepage": "https://gabstep.com.br/"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Controller\\": "App\\Controller",
+            "Helpers\\": "App\\Helpers",
+            "Library\\": "App\\Library",
+            "Model\\": "App\\Model"
+        },
+        "files": []
+    },
+    "require": {
+        "php-webdriver/webdriver": "^1.7"
+    }
+}
