@@ -8,14 +8,31 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\Exception\UnexpectedAlertOpenException;
 use Facebook\WebDriver\Exception\ElementNotInteractableException;
+use Facebook\WebDriver\Chrome\ChromeOptions;
 
 class WhatsAppController {
 
     private RemoteWebDriver $webDriver;
     private string $sessionKey = "hiperesp_whatsapp_localstorage";
 
-    public function __construct() {
-        $this->webDriver = RemoteWebDriver::create('http://localhost:9515', DesiredCapabilities::chrome(), 5000);
+    public function __construct($resolutionX = 320, $resolutionY = 240, $deviceScaleFactor = 0.25) {
+        $resolutionX = round($resolutionX/$deviceScaleFactor);
+        $resolutionY = round($resolutionY/$deviceScaleFactor);
+
+        $options = new ChromeOptions();
+        $options->addArguments([
+            '--no-sandbox',
+            '--disable-gpu',
+            #'--headless',
+            #'start-maximized',
+            'disable-infobars',
+            '--force-device-scale-factor='.$deviceScaleFactor,
+            '--window-size='.$resolutionX.','.$resolutionY
+        ]);
+        $capabilities = DesiredCapabilities::chrome();
+        $capabilities->setCapability(ChromeOptions::CAPABILITY, $options);
+    
+        $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub/', $capabilities, 20000);
         $this->webDriver->get("https://web.whatsapp.com");
     }
     public function auth(): void {
@@ -31,10 +48,10 @@ class WhatsAppController {
         ]);
         $this->webDriver->get($url);
         $this->webDriver->wait(100, 100)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("._1JNuk ._1U1xa")));
-        sleep(1);
+        sleep(4);
         $sendButton = $this->webDriver->findElement(WebDriverBy::cssSelector("._1JNuk ._1U1xa"));
         $sendButton->click();
-        sleep(1);
+        sleep(4);
     }
     public function sessionStart(): void {
         if(!session_id()) {
