@@ -15,7 +15,7 @@ class WhatsAppController {
     private RemoteWebDriver $webDriver;
     private string $sessionKey = "hiperesp_whatsapp_localstorage";
 
-    public function __construct($resolutionX = 320, $resolutionY = 240, $deviceScaleFactor = 0.25) {
+    public function __construct($resolutionX = 1280, $resolutionY = 720, $deviceScaleFactor = 1) {
         $resolutionX = round($resolutionX/$deviceScaleFactor);
         $resolutionY = round($resolutionY/$deviceScaleFactor);
 
@@ -42,16 +42,17 @@ class WhatsAppController {
         # USUARIO FEZ O LOGIN
     }
     public function sendMessage(string $number, string $text): void {
+        $delay = 1;
         $url = "https://web.whatsapp.com/send?".http_build_query([
             "phone" => $number,
             "text" => $text
         ]);
         $this->webDriver->get($url);
         $this->webDriver->wait(100, 100)->until(WebDriverExpectedCondition::presenceOfElementLocated(WebDriverBy::cssSelector("._1JNuk ._1U1xa")));
-        sleep(4);
+        sleep($delay);
         $sendButton = $this->webDriver->findElement(WebDriverBy::cssSelector("._1JNuk ._1U1xa"));
         $sendButton->click();
-        sleep(4);
+        sleep($delay);
     }
     public function sessionStart(): void {
         if(!session_id()) {
